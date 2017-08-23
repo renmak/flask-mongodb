@@ -1,6 +1,8 @@
 import os
 from flask import Flask, redirect, url_for, request, render_template
 from pymongo import MongoClient
+from bson import json_util
+
 
 app = Flask(__name__)
 
@@ -17,6 +19,15 @@ def todo():
     items = [item for item in _items]
 
     return render_template('todo.html', items=items)
+
+
+@app.route('/todos')
+def test():
+
+    _items = db.tododb.find({}, { "_id": 0 })
+    items = [item for item in _items]
+
+    return json_util.dumps(items)
 
 
 @app.route('/new', methods=['POST'])
